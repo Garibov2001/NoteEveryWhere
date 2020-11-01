@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+
+<!-- Custom Style -->
+{% block style %}
+    <link rel="stylesheet" href="{{url_for('static', filename = 'login.css')}}">
+{% endblock style %}
+
+
+<!-- Content -->
+{% block content %} 
+    <div class="sidenav">
+        <div class="login-main-text">
+        <h2>Note in everywhere!<br> Login Page</h2>
+        <p>Login or register from here to access your notes.</p>
+        </div>
+    </div>
+    <div class="main">
+        <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input type="text" class="form-control" placeholder="User Name">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-black">Login</button>
+                <a href="{{url_for('register_page')}}" class="btn btn-secondary">Register</a>
+            </form>
+        </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+<!-- Scripts -->
+{% block script %}
+
+{% endblock script %}
