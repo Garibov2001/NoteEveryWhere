@@ -1,6 +1,7 @@
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
+from datetime import timedelta
 
 
 
@@ -12,6 +13,7 @@ from sqlalchemy import *
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root:admin@127.0.0.1:3306/todolist'
 app.config['SECRET_KEY'] = "5791628bb0b13ce0c676dfde280ba245"
+app.permanent_session_lifetime = timedelta(days=5)
 db = SQLAlchemy(app)
 
 
@@ -45,7 +47,7 @@ def login_page():
             record = users.query.filter(users.email == email, users.password == password).first()
             if(record):
                 session['user_id'] = record.id
-                return redirect(url_for('account_page', user_id = record.id))
+                return redirect(url_for('account_page'))
             else:
                 flash('Email or password is not true!', 'danger')
                 return render_template('login.html', invalidField = request.form)
@@ -56,7 +58,7 @@ def login_page():
         # Eger login olubsa birde logine getmeyecek
         if('user_id' in session):
             record_id = session['user_id']
-            return redirect(url_for('account_page', user_id = record_id))
+            return redirect(url_for('account_page'))
         else:
             return render_template('login.html', invalidField = request.form)
 
@@ -83,27 +85,28 @@ def register_page():
     else:
         if('user_id' in session):
             record_id = session['user_id']
-            return redirect(url_for('account_page', user_id = record_id))
+            return redirect(url_for('account_page'))
         else:
             return render_template('register.html')
 
 
 @app.route('/account', methods = ['GET','POST'])
 def account_page():
-    record = users.query.filter(users.id == user_id).first()
-    if(record == None):
-        abort(404)
-    else:
+    if('user_id' in session):
         if (request.method == 'POST'):        
             pass
-        else:
-            if('user_id' in session):
-                record = users.query.filter(users.id == user_id).first()            
-                return render_template('account.html', user = record)
-            else:
-                return redirect(url_for('login_page'))
+        else:            
+            record = users.query.filter(users.id == session['user_id']).first()            
+            return render_template('account.html', user = record)
+    else:
+        return redirect(url_for('login_page'))
 
 
+
+@app.route('/logout')
+def logout_page():
+    session.pop('user_id', None)
+    return redirect(url_for('login_page'))
 
 
 
