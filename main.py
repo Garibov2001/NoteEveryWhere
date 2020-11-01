@@ -92,15 +92,67 @@ def register_page():
 
 @app.route('/account', methods = ['GET','POST'])
 def account_page():
+    title = 'Your List'
     if('user_id' in session):
         if (request.method == 'POST'):        
             pass
         else:            
             record = users.query.filter(users.id == session['user_id']).first()            
-            return render_template('account.html', user = record)
+            return render_template('account.html', user = record, title = title, settings = False)
     else:
         return redirect(url_for('login_page'))
 
+@app.route('/account/settings', methods = ['GET','POST'])
+def account_settings_page():
+    title = 'Account Settings'
+    if('user_id' in session):
+        if (request.method == 'POST'): 
+            argName = request.form['name']
+            argSurname = request.form['surname']
+            argPass = request.form['password']
+            argConfirmPass = request.form['confirm_password']
+            argCurrentPass = request.form['current_password']
+
+            if ((argName and argSurname and (bool(argPass) == False) 
+                and (bool(argConfirmPass) == False))):
+                record = users.query.filter(users.id == session['user_id']).first()
+                if (argCurrentPass == record.password):
+                    record.name = argName
+                    record.surname = argSurname
+                    db.session.commit()
+                    flash('Your account is updated!', 'success')
+                    return redirect(url_for('account_page'))
+                else:
+                    flash('Your current password is not true!', 'danger')
+                    record = users.query.filter(users.id == session['user_id']).first()            
+                    return render_template('account.html', user = record, title = title, settings = True)
+            elif(argName and argSurname and argPass and argConfirmPass):
+                if (argPass == argConfirmPass):
+                    record = users.query.filter(users.id == session['user_id']).first()
+                    if (argCurrentPass == record.password):
+                        record.name = argName
+                        record.surname = argSurname
+                        record.password = argPass
+                        db.session.commit()
+                        flash('Your account is updated!', 'success')
+                        return redirect(url_for('account_page'))
+                    else:
+                        flash('Your current password is not true!', 'danger')
+                        record = users.query.filter(users.id == session['user_id']).first()            
+                        return render_template('account.html', user = record, title = title,  settings = True)
+                else:
+                    flash('Your passwords doesn\'t match!', 'danger')
+                    record = users.query.filter(users.id == session['user_id']).first()            
+                    return render_template('account.html', user = record, title = title,  settings = True)
+            else:
+                flash('Name, surname or all fields can\'t be empty!', 'danger')
+                record = users.query.filter(users.id == session['user_id']).first()            
+                return render_template('account.html', user = record, title = title,  settings = True)
+        else:            
+            record = users.query.filter(users.id == session['user_id']).first()            
+            return render_template('account.html', user = record, title = title, settings = True)
+    else:
+        return redirect(url_for('login_page'))
 
 
 @app.route('/logout')
