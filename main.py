@@ -35,22 +35,36 @@ class users(db.Model):
 # ----------------Routes --------------------
 # ===========================================
 
+@app.route('/', methods = ['GET','POST'])
 @app.route('/login', methods = ['GET','POST'])
 def login_page():
     if request.method == 'POST':
-        return 'Welcome'
+        pass        
     else:
         return render_template('login.html')
 
 
 @app.route('/register', methods = ['GET','POST'])
 def register_page():
-    if request.method == 'POST':
-        print(request.form['name'])
-        print(request.form['surname'])
-        print(request.form['email'])
-        print(request.form['password'])
-        return 'Welcome'
+
+    if (request.method == 'POST'):        
+        name = request.form['name']
+        surname = request.form['surname']
+        email = request.form['email']
+        password = request.form['password']
+        print(users.query.filter(users.email == email).first())
+        if (name and surname and email and password):
+            # if(users.query.filter(email == argEmail).first()):
+            #     flash('This email is already exist!', 'danger')
+            #     return render_template('register.html')                
+            user = users(name = name, surname = surname, email = email, password = password)
+            db.session.add(user)
+            db.session.commit()
+            flash(f'{name} {surname} registered. ', 'success')
+            return redirect(url_for('login_page'))
+        else:
+            flash('Something is wrong!', 'danger')
+            return render_template('register.html')
     else:
         return render_template('register.html')
 

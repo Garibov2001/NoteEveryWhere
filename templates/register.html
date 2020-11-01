@@ -20,7 +20,18 @@
                     <div class="card">
                         <div class="card-header">Register</div>
                         <div class="card-body">
-                            <form method="POST" action="" >
+                            <form method="POST" action="" >  
+                                <div class="form-group">
+                                    {% with messages = get_flashed_messages(with_categories=true) %}
+                                        {% if messages %}
+                                            {% for category, message in messages %}
+                                                <div class="alert alert-{{ category }} text-center">
+                                                {{ message }}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}                                    
+                                </div>                  
                                 <div class="d-flex justify-content-center">
                                     <div class="form-group mr-5">
                                         <label>Name</label>
@@ -44,7 +55,7 @@
                                 <div class="col-md-6 offset-md-4">                         
                                     <button type="submit" class="btn btn-dark">Register</button>                             
                                     <a href="{{url_for('login_page')}}" class="btn btn-secondary">Back to Login</a>
-                                </div>                            
+                                </div>                                         
                             </form>
                         </div>
                     </div>
@@ -52,6 +63,8 @@
             </div>
         </div>
     </main>
+
+
 
 {% endblock content %}
 
