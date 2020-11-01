@@ -39,14 +39,23 @@ class users(db.Model):
 @app.route('/login', methods = ['GET','POST'])
 def login_page():
     if request.method == 'POST':
-        pass        
+        email = request.form['email']
+        password = request.form['password']
+        if(email and password):
+            record = users.query.filter(users.email == email, users.password == password).first()
+            if(record):
+                return 'Good'
+            else:
+                flash('Email or password is not true!', 'danger')
+                return render_template('login.html', invalidField = request.form)
+        else:
+            flash('Email or password field is empty!', 'danger')
+            return render_template('login.html', invalidField = request.form)
     else:
-        return render_template('login.html')
-
+        return render_template('login.html', invalidField = request.form)
 
 @app.route('/register', methods = ['GET','POST'])
 def register_page():
-
     if (request.method == 'POST'):        
         name = request.form['name']
         surname = request.form['surname']
@@ -66,11 +75,6 @@ def register_page():
             return render_template('register.html')
     else:
         return render_template('register.html')
-
-
-
-
-
 
 
 
