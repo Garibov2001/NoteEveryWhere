@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+
+<!-- Custom Style -->
+{% block style %}
+    <link rel="stylesheet" href="{{url_for('static', filename = 'account.css')}}">
+{% endblock style %}
+
+
+<!-- Content -->
+{% block content %} 
+
+    <div class="vertical-nav bg-white" id="sidebar">
+        <div class="py-4 px-3 mb-4 bg-light">
+        <div class="media d-flex align-items-center"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556074849/avatar-1_tcnd60.png" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+            <div class="media-body">
+            <h6 class="m-0">{{user.name}} {{user.surname}}</h6>
+            <p class="font-weight-light text-muted mb-0">{{user.email}}</p>
+            </div>
+        </div>
+        </div>
+    
+        <ul class="nav flex-column bg-white mb-0">
+            <li class="nav-item">
+                <a href="{{url_for('account_page')}}" class="nav-link text-dark bg-light">
+                    <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+                    My list
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{url_for('account_settings_page')}}" class="nav-link text-dark bg-light">
+                    <i class="fas fa-user-cog mr-3 text-primary fa-fw"></i>
+                    Settings
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{url_for('logout_page')}}" class="nav-link text-dark bg-light">
+                    <i class="fas fa-sign-out-alt mr-3 text-primary fa-fw"></i>
+                    Log out
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="page-content p-5" id="content">
+        <h2 class="display-4 text-dark pb-4">{{title}}</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                    {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}  
+        <div class="col pb-5">
+            {% if settings %}
+                <form method="POST" action="" class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="account-fn">First Name</label>
+                            <input name="name" value="{{user.name}}" class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="account-ln">Surname</label>
+                            <input name="surname"  value="{{user.surname}}" class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="account-email">E-mail Address</label>
+                            <input disabled name="email"  value="{{user.email}}" class="form-control" type="email">
+                        </div>
+                    </div>                    
+                    <div class="col-md-6">                
+                        <div class="form-group">
+                            <label for="account-pass">New Password</label>
+                            <input name="password"  class="form-control" type="password">
+                            <small class="text-muted">If you don't want to change password, don't type anything.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-confirm-pass">Confirm New Password</label>
+                            <input name="confirm_password"  class="form-control" type="password" id="account-confirm-pass">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr class="mt-2 mb-3">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <label class="pt-1">To update profile, type your current password: </label>
+                            <input name="current_password"  class="form-control col-3 mr-3 ml-3" type="password" placeholder="Current password">
+                            <button class="btn btn-style-1 btn-primary" type="submit">Update Profile</button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock content %}
+
+
+<!-- Scripts -->
+{% block script %}
+
+<script>
+    $(function() {
+  // Sidebar toggle behavior
+  $('#sidebarCollapse').on('click', function() {
+    $('#sidebar, #content').toggleClass('active');
+  });
+});
+
+
+</script>
+
+{% endblock script %}

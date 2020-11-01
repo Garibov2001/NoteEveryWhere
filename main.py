@@ -125,7 +125,7 @@ def account_settings_page():
                 else:
                     flash('Your current password is not true!', 'danger')
                     record = users.query.filter(users.id == session['user_id']).first()            
-                    return render_template('account.html', user = record, title = title, settings = True)
+                    return render_template('account_settings.html', user = record, title = title, settings = True)
             elif(argName and argSurname and argPass and argConfirmPass):
                 if (argPass == argConfirmPass):
                     record = users.query.filter(users.id == session['user_id']).first()
@@ -139,18 +139,18 @@ def account_settings_page():
                     else:
                         flash('Your current password is not true!', 'danger')
                         record = users.query.filter(users.id == session['user_id']).first()            
-                        return render_template('account.html', user = record, title = title,  settings = True)
+                        return render_template('account_settings.html', user = record, title = title,  settings = True)
                 else:
                     flash('Your passwords doesn\'t match!', 'danger')
                     record = users.query.filter(users.id == session['user_id']).first()            
-                    return render_template('account.html', user = record, title = title,  settings = True)
+                    return render_template('account_settings.html', user = record, title = title,  settings = True)
             else:
                 flash('Name, surname or all fields can\'t be empty!', 'danger')
                 record = users.query.filter(users.id == session['user_id']).first()            
-                return render_template('account.html', user = record, title = title,  settings = True)
+                return render_template('account_settings.html', user = record, title = title,  settings = True)
         else:            
             record = users.query.filter(users.id == session['user_id']).first()            
-            return render_template('account.html', user = record, title = title, settings = True)
+            return render_template('account_settings.html', user = record, title = title, settings = True)
     else:
         return redirect(url_for('login_page'))
 

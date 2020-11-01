@@ -42,66 +42,22 @@
         </ul>
     </div>
 
+    <div class="page-content p-5" id="content">
+        <h2 class="display-4 text-dark pb-4">{{title}}</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                    {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}  
 
-        <div class="page-content p-5" id="content">
-            <h2 class="display-4 text-dark pb-4">{{title}}</h2>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                        {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}  
-            <div class="col pb-5">
-                {% if settings %}
-                    <form method="POST" action="" class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="account-fn">First Name</label>
-                                <input name="name" value="{{user.name}}" class="form-control" type="text">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="account-ln">Surname</label>
-                                <input name="surname"  value="{{user.surname}}" class="form-control" type="text">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="account-email">E-mail Address</label>
-                                <input disabled name="email"  value="{{user.email}}" class="form-control" type="email">
-                            </div>
-                        </div>                    
-                        <div class="col-md-6">                
-                            <div class="form-group">
-                                <label for="account-pass">New Password</label>
-                                <input name="password"  class="form-control" type="password">
-                                <small class="text-muted">If you don't want to change password, don't type anything.</small>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="account-confirm-pass">Confirm New Password</label>
-                                <input name="confirm_password"  class="form-control" type="password" id="account-confirm-pass">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <hr class="mt-2 mb-3">
-                            <div class="d-flex justify-content-end align-items-center">
-                                <label class="pt-1">To update profile, type your current password: </label>
-                                <input name="current_password"  class="form-control col-3 mr-3 ml-3" type="password" placeholder="Current password">
-                                <button class="btn btn-style-1 btn-primary" type="submit">Update Profile</button>
-                            </div>
-                        </div>
-                    </form>
-                {% else %}
+           
 
-                {% endif %}
-            </div>
-        </div>
+
+    </div>
 
 
     
