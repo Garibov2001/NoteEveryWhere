@@ -44,7 +44,8 @@ def login_page():
         if(email and password):
             record = users.query.filter(users.email == email, users.password == password).first()
             if(record):
-                return 'Good'
+                session['user_id'] = record.id
+                return redirect(url_for('account_page', user_id = record.id))
             else:
                 flash('Email or password is not true!', 'danger')
                 return render_template('login.html', invalidField = request.form)
@@ -52,7 +53,13 @@ def login_page():
             flash('Email or password field is empty!', 'danger')
             return render_template('login.html', invalidField = request.form)
     else:
-        return render_template('login.html', invalidField = request.form)
+        # Eger login olubsa birde logine getmeyecek
+        if('user_id' in session):
+            record_id = session['user_id']
+            return redirect(url_for('account_page', user_id = record_id))
+        else:
+            return render_template('login.html', invalidField = request.form)
+
 
 @app.route('/register', methods = ['GET','POST'])
 def register_page():
@@ -74,7 +81,28 @@ def register_page():
             flash('Something is wrong!', 'danger')
             return render_template('register.html')
     else:
-        return render_template('register.html')
+        if('user_id' in session):
+            record_id = session['user_id']
+            return redirect(url_for('account_page', user_id = record_id))
+        else:
+            return render_template('register.html')
+
+
+@app.route('/account', methods = ['GET','POST'])
+def account_page():
+    record = users.query.filter(users.id == user_id).first()
+    if(record == None):
+        abort(404)
+    else:
+        if (request.method == 'POST'):        
+            pass
+        else:
+            if('user_id' in session):
+                record = users.query.filter(users.id == user_id).first()            
+                return render_template('account.html', user = record)
+            else:
+                return redirect(url_for('login_page'))
+
 
 
 
