@@ -1,7 +1,7 @@
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
-from datetime import timedelta
+from datetime import timedelta, date
 
 
 
@@ -31,11 +31,22 @@ class users(db.Model):
     def __repr__(self): 
         return f"users('id: {self.id}', 'name: {self.name}' , 'surname: {self.surname}', 'email: {self.email}', 'password: {self.password}')" 
 
+class lists(db.Model):
+    id = db.Column(db.Integer, primary_key = True, autoincrement=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable= False) # Foreign key to Candidates   
+    status = db.Column(db.Integer, nullable= False, default = 0)  # 0 -Undone, 1- Done
+    star = db.Column(db.Boolean(), nullable= False, default = False) # True - Starred, False - Unstarred
+    content = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.Date(), nullable= False, default = date.today )
+
+    def __repr__(self): 
+        return f"lists('id: {self.id}', 'user_id: {self.user_id}' , 'status: {self.status}', 'content: {self.content}', 'date: {self.date}')" 
 
 
 # ===========================================
 # ----------------Routes --------------------
 # ===========================================
+
 
 @app.route('/', methods = ['GET','POST'])
 @app.route('/login', methods = ['GET','POST'])
@@ -61,7 +72,6 @@ def login_page():
             return redirect(url_for('account_page'))
         else:
             return render_template('login.html', invalidField = request.form)
-
 
 @app.route('/register', methods = ['GET','POST'])
 def register_page():
@@ -89,16 +99,12 @@ def register_page():
         else:
             return render_template('register.html')
 
-
-@app.route('/account', methods = ['GET','POST'])
+@app.route('/account', methods = ['GET'])
 def account_page():
     title = 'Your List'
-    if('user_id' in session):
-        if (request.method == 'POST'):        
-            pass
-        else:            
-            record = users.query.filter(users.id == session['user_id']).first()            
-            return render_template('account.html', user = record, title = title, settings = False)
+    if('user_id' in session):      
+        record = users.query.filter(users.id == session['user_id']).first()            
+        return render_template('account.html', user = record, title = title, settings = False)
     else:
         return redirect(url_for('login_page'))
 
@@ -154,11 +160,26 @@ def account_settings_page():
     else:
         return redirect(url_for('login_page'))
 
-
 @app.route('/logout')
 def logout_page():
     session.pop('user_id', None)
     return redirect(url_for('login_page'))
+
+
+@app.route('/account/note_add', methods = ['POST'])
+def note_add():
+    if('user_id' in session):   
+        noteObj = lists(user_id = session['user_id'], content = request.form['content'])
+        db.session.add(noteObj)
+        db.session.commit()
+
+        return 'Hello'  
+        # record = users.query.filter(users.id == session['user_id']).first()            
+        # return render_template('account.html', user = record, title = title, settings = False)
+    else:
+        return redirect(url_for('login_page'))
+
+
 
 
 

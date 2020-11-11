@@ -42,6 +42,7 @@
         </ul>
     </div>
 
+
     <div class="page-content p-5" id="content">
         <h2 class="display-4 text-dark pb-4">{{title}}</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -53,6 +54,51 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}  
+
+        <div class="card col">
+            <ul class="list-group list-group-flush">                
+                <li class="list-group-item d-flex justify-content-around">
+                    <input name="content" type="text" class="form-control col-9" placeholder="Type your daily tasks">
+                    <button id="add_note" class="btn btn-primary col-2">+ Add</button>    
+                </li>                    
+                <li class="list-group-item d-flex justify-content-between">
+                    <form method="POST" action="">
+                        <div class="d-flex">
+                            <div class="d-flex align-items-center">
+                                <input checked type="checkbox">
+                                <span class="mr-2 ml-2"><i class="far fa-star"></i></span>
+                            </div>
+                            <span>Sabah vaxtasiri bir seyleri click ele</span> 
+                            <input type="text" value="Sabah vaxtasiri bir seyleri click ele"  class="form-control">
+                        </div>
+                        <div class="d-flex"> 
+                            <span class="mr-5">02.11.2020</span>
+                            <a href="#" id="noteEdit"><i class="fas fa-edit text-primary" style="font-size: 20px;" ></i></a>
+                            <a href="#" id="noteRemove"><i class="fas fa-trash-alt text-danger" style="font-size: 20px;" ></i></a>
+                            <input id="note_id" type="hidden">
+                        </div>
+                    </form>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <form method="POST" action="">
+                        <div class="d-flex">
+                            <div class="d-flex align-items-center">
+                                <input checked type="checkbox">
+                                <span class="mr-2 ml-2"><i class="far fa-star"></i></span>
+                            </div>
+                            <span>Sabah vaxtasiri bir seyleri click ele</span> 
+                            <input type="text" value="Sabah vaxtasiri bir seyleri click ele"  class="form-control">
+                        </div>
+                        <div class="d-flex"> 
+                            <span class="mr-5">02.11.2020</span>
+                            <a href="#" id="noteEdit"><i class="fas fa-edit text-primary" style="font-size: 20px;" ></i></a>
+                            <a href="#" id="noteRemove"><i class="fas fa-trash-alt text-danger" style="font-size: 20px;" ></i></a>
+                            <input id="note_id" type="hidden">
+                        </div>
+                    </form>
+                </li>                                   
+            </ul>
+        </div>
 
            
 
@@ -68,15 +114,6 @@
 <!-- Scripts -->
 {% block script %}
 
-<script>
-    $(function() {
-  // Sidebar toggle behavior
-  $('#sidebarCollapse').on('click', function() {
-    $('#sidebar, #content').toggleClass('active');
-  });
-});
-
-
-</script>
+<script src="{{url_for('static', filename = 'notes.js')}}"></script>
 
 {% endblock script %}
